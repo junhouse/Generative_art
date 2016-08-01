@@ -5,6 +5,7 @@
 from PIL import Image, ImageDraw, ImageFilter
 from skimage import measure
 from random import randint
+import math as math
 import matplotlib.pyplot as plt
 import sys
 
@@ -132,12 +133,46 @@ class paintings(object):
         else:
             return True
 
+    #outputs artists colors in a form of .png file
+    def get_color_palette(self):
+        #create a new blank image
+        blank_image = Image.new("RGB", (1024, 1024), "White")
+        num_box = int(math.ceil(math.sqrt(len(self.color_schemes))))
+        box_size = int(1024 / num_box)
+
+
+        start_x = 0
+        start_y = 0
+        color_index = 0
+
+        for box_w in range(0,num_box):
+            for box_h in range(0,num_box):
+                if color_index < len(self.color_schemes):
+                    self.fill_color(blank=blank_image,pixel=self.color_schemes[color_index],start_x=start_x, start_y=start_y, box_size=box_size)
+                start_y = start_y + box_size
+                color_index = color_index + 1
+            start_x = start_x + box_size
+            start_y = 0
+
+        blank_image.save('artist_color.png')
+
+
+    #fill a square with given color
+    def fill_color(self, blank, pixel, start_x, start_y, box_size):
+
+        for x in range(start_x, start_x + box_size):
+            for y in range(start_y, start_y + box_size):
+                if(x < 1024 and y < 1024): #make sure index is correct
+                    blank.putpixel((x,y), pixel)
+
 
 
 
 paths = ['Pictures/TwoTahitianWomen.jpg','Pictures/AVisionAfterTheSermon.jpg']
 obj = paintings(img_paths=paths)
 obj.extract_colors()
+obj.get_color_palette()
+
 print "Number of colors selected: ", len(obj.color_schemes)
 print obj.color_schemes
 
