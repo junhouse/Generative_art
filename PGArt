@@ -6,66 +6,7 @@ import matplotlib.pyplot as plt
 import sys
 
 
-#CONSATNS
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-B_W_Thresh = 100 #threshold to decide either black or white
-IMG_PATH = "default.jpg"
 
-
-#Image class
-class image(object):
-
-    #costructor
-    def __init__(self, img_path):
-        self.img = Image.open(img_path).convert('RGB')
-        self.width, self.height = self.img.size
-
-    #get the artist favorite color schemes
-    def get_colors(self):
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
-    def get_boundary_img(self):
-        #Temp
-        self.img_edge = self.img_edge.filter(ImageFilter.FIND_EDGES)
-        self.img_edge.save("result2.png")
-        #self.img_edge = self.img.filter(ImageFilter.FIND_EDGES)
-
-
-    '''loop through every pixel in the picture and change it to either BLACK or WHITE'''
-    def black_white_pixels(self):
-        for y in range(0, self.height -1):
-            for x in range(0, self.width-1):
-                r, g, b = self.img_edge.getpixel( (x,y) )
-                #check threshold. If equal or less than thresh, make it black
-                if r <= B_W_Thresh or g <= B_W_Thresh or b <= B_W_Thresh:
-                    self.img_edge.putpixel((x,y), BLACK)
-                else:
-                    self.img_edge.putpixel((x,y), WHITE)
-        self.img_edge.save("result.png")
-
-
-
-test_image = image(IMG_PATH)
-test_image.black_white_pixels()
-test_image.get_boundary_img()
 
 
 

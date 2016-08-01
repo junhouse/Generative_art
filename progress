@@ -1,3 +1,12 @@
-July 31
+August 1
 
-1. finish writing up getting colors, and test each functions
+
+Observations from the original painting
+
+
+Color variation within object is very minimal 2~4 in each pixel
+
+Has clear (BLACK or DARK) border ( if pixels' colors differ by alot, then black -> to get clear black border)
+
+At least one really bright color, and really dark color for contrast
+

@@ -4,6 +4,7 @@
 
 from PIL import Image, ImageDraw, ImageFilter
 from skimage import measure
+from random import randint
 import matplotlib.pyplot as plt
 import sys
 
@@ -13,7 +14,7 @@ import sys
 class paintings(object):
 
     #costructor, it takes a python list of all artist paintings
-    def __init__(self, img_paths)
+    def __init__(self, img_paths):
 
         self.paintings_paths = img_paths
         self.painting_counts = len(img_paths)
@@ -36,7 +37,7 @@ class paintings(object):
         LARGE = 80
 
         #threshold for pixel difference
-        color_thresh = 55 #55 for now, change accordingly based on the result
+        color_thresh = 5 #55 for now, change accordingly based on the result
 
         #get square size
         if(square_size == 'X_SMALL'):
@@ -70,40 +71,77 @@ class paintings(object):
             num_of_square_in_width = p_width / S_size
             num_of_square_in_height = p_height / S_size
 
-    #helper function for iterating a painting(RGB converted)
-    def iterate_paiting(self, square, painting, values):
+            self.iterate_painting_get_color(S_size, painting, num_of_square_in_width=num_of_square_in_width,
+                                            num_of_square_in_height=num_of_square_in_height, pixel_thresh=color_thresh)
 
+
+
+    #iterate the whole painting
+    def iterate_painting_get_color(self, square, painting, num_of_square_in_width, num_of_square_in_height, pixel_thresh):
+
+        start_x_coord = 0
+        start_y_coord = 0
+
+        for width in range(0,num_of_square_in_width):
+            for height in range(0, num_of_square_in_height):
+                #if there is a color to be added
+                the_color = self.return_color(start_x_coord, start_y_coord, square, painting, pixel_thresh);
+                if the_color:
+                    self.color_schemes.append(the_color)
+
+                start_y_coord = start_y_coord + square
+            #end of the second for loop
+            start_x_coord = start_x_coord + square
+            start_y_coord = 0
+
+    #helper function for iterating a painting(RGB converted)
+    def return_color(self, start_x, start_y, square, painting, pixel_thresh):
+
+        #get the random pixel within the range
+        rand_x = randint(start_x, start_x + square)
+        rand_y = randint(start_y, start_y + square)
+        rand_pixel = painting.getpixel( (rand_x, rand_y))
+        found = True
+
+        #loop every pixel
+        for x in range(start_x, start_x + square):
+            for y in range(start_y, start_y + square):
+                compare_pixel = painting.getpixel( (x,y) )
+                if not self.compare_pixel_color(rand_pixel, compare_pixel, thresh_value=pixel_thresh):
+                    found = False
+
+        #return according value
+        if found:
+            return rand_pixel
+        else:
+            return False
 
 
     #compare two pixels given threshold. pixel1 will be the random pixel
     def compare_pixel_color(self, pixel1, pixel2, thresh_value):
+        if pixel1 == None:
+            print 'pixel1 does not exist'
+        elif pixel2 == None:
+            print 'pixel2 does not exist'
+
         r1, g1, b1 = pixel1
         r2, g2, b2 = pixel2
 
         if abs(r1 - r2) > thresh_value or abs(g1 - g2)> thresh_value or abs(b1 - b2) > thresh_value:
             return False
         else:
-            return pixel1
+            return True
 
 
 
-    '''loop through every pixel in the picture and change it to either BLACK or WHITE'''
-    def black_white_pixels(self):
-        for y in range(0, self.height -1):
-            for x in range(0, self.width-1):
-                r, g, b = self.img_edge.getpixel( (x,y) )
-                #check threshold. If equal or less than thresh, make it black
-                if r <= B_W_Thresh or g <= B_W_Thresh or b <= B_W_Thresh:
-                    self.img_edge.putpixel((x,y), BLACK)
-                else:
-                    self.img_edge.putpixel((x,y), WHITE)
-        self.img_edge.save("result.png")
+
+paths = ['Pictures/TwoTahitianWomen.jpg','Pictures/AVisionAfterTheSermon.jpg']
+obj = paintings(img_paths=paths)
+obj.extract_colors()
+print "Number of colors selected: ", len(obj.color_schemes)
+print obj.color_schemes
 
 
-
-test_image = image(IMG_PATH)
-test_image.black_white_pixels()
-test_image.get_boundary_img()
 
 
 
