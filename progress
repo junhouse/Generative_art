@@ -1,13 +1,18 @@
-August 1
 
 
-Observations from the original painting
+
+1. How to paint?
+    Group the color_schems by their colors. Similar colors in one list etc.
+        How to order color_schemes ( http://www.alanzucconi.com/2015/09/30/colour-sorting/ , http://www.poeschko.com/2011/09/extreme-geeky-tidying-up/ )
+        Use hilbert algorithm and etc
+
+    Divide the pixels by really small squares first (probably 3 X 3 or 4 X 4)
+    Apply algorithm
+        algorithm
+            a. Get the average of a square
+            b. Look at color schems, and get the one that is close to the average
+            c. We know color_schemes are ordered, get surrounding colors and paint with those colors
 
 
-Color variation within object is very minimal 2~4 in each pixel
 
-Has clear (BLACK or DARK) border ( if pixels' colors differ by alot, then black -> to get clear black border)
-
-At least one really bright color, and really dark color for contrast
-
-Why am I not getting the white pixels ? check algorith for getting colors
+    Give some objects dark and black countour

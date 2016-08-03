@@ -1,12 +1,9 @@
-from PIL import Image, ImageDraw, ImageFilter
-from skimage import measure
-
-
-import matplotlib.pyplot as plt
-import sys
+from artist import *
+from mypic import *
 
 
 #Main.py
+
 
 
 

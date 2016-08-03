@@ -6,6 +6,7 @@ from PIL import Image, ImageDraw, ImageFilter
 from skimage import measure
 from random import randint
 import math as math
+import pickle
 import matplotlib.pyplot as plt
 import sys
 
@@ -15,11 +16,12 @@ import sys
 class paintings(object):
 
     #costructor, it takes a python list of all artist paintings
-    def __init__(self, img_paths):
+    def __init__(self, img_paths, thresh_value):
 
         self.paintings_paths = img_paths
         self.painting_counts = len(img_paths)
         self.color_schemes = []
+        self.color_thresh = thresh_value
 
 
     #check errors
@@ -36,9 +38,6 @@ class paintings(object):
         SMALL = 20
         MID = 40
         LARGE = 80
-
-        #threshold for pixel difference
-        color_thresh = 5 #55 for now, change accordingly based on the result
 
         #get square size
         if(square_size == 'X_SMALL'):
@@ -73,7 +72,7 @@ class paintings(object):
             num_of_square_in_height = p_height / S_size
 
             self.iterate_painting_get_color(S_size, painting, num_of_square_in_width=num_of_square_in_width,
-                                            num_of_square_in_height=num_of_square_in_height, pixel_thresh=color_thresh)
+                                            num_of_square_in_height=num_of_square_in_height, pixel_thresh=self.color_thresh)
 
 
 
@@ -128,7 +127,7 @@ class paintings(object):
         r1, g1, b1 = pixel1
         r2, g2, b2 = pixel2
 
-        if abs(r1 - r2) > thresh_value or abs(g1 - g2)> thresh_value or abs(b1 - b2) > thresh_value:
+        if (abs(r1 - r2) > thresh_value) or (abs(g1 - g2)> thresh_value) or (abs(b1 - b2) > thresh_value):
             return False
         else:
             return True
@@ -167,14 +166,25 @@ class paintings(object):
 
 
 
+### TESTING ### TESTING ### TESTING ### TESTING ###
+#Constant Variables
 
-paths = ['Pictures/TwoTahitianWomen.jpg','Pictures/AVisionAfterTheSermon.jpg']
-obj = paintings(img_paths=paths)
+Thresh_value = 25
+paths = ['Pictures/TwoTahitianWomen.jpg', 'Pictures/AVisionAfterTheSermon.jpg',
+         "Pictures/Paul_Gauguin_-_D'ou_venons-nous.jpg",
+         "Pictures/Paul_Gauguin-_Manao_tupapau_(The_Spirit_of_the_Dead_Keep_Watch).jpg"]
+
+
+
+obj = paintings(img_paths=paths, thresh_value=Thresh_value)
 obj.extract_colors()
 obj.get_color_palette()
 
+
+
 print "Number of colors selected: ", len(obj.color_schemes)
 print obj.color_schemes
+pickle.dump( obj.color_schemes, open( "save.p", "wb" ) )
 
 
 
